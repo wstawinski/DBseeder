@@ -34,6 +34,7 @@ namespace DBseeder
                 Console.WriteLine("5 - Products");
                 Console.WriteLine("6 - Reviews");
                 Console.WriteLine("7 - Users");
+                Console.WriteLine("8 - News");
                 Console.WriteLine("0 - Exit");
 
                 if (int.TryParse(Console.ReadLine(), out choice))
@@ -53,6 +54,8 @@ namespace DBseeder
                         case 6: ReviewsSeeder.Seed(mongoDatabase, couchbaseCluster);
                             break;
                         case 7: UsersSeeder.Seed(mongoDatabase, couchbaseCluster);
+                            break;
+                        case 8: NewsSeeder.Seed(mongoDatabase, couchbaseCluster).Wait();
                             break;
                         default:
                             break;
