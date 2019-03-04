@@ -45,7 +45,7 @@ namespace DBseeder.EntitySeeders
                 };
 
                 mongoCollection.InsertOne(method);
-                couchbaseBucket.Insert(method.Id.ToString(), method);
+                couchbaseBucket.Insert(method.Id, method);
             }
         }
     }

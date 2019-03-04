@@ -43,7 +43,7 @@ namespace DBseeder.EntitySeeders
                 };
 
                 mongoCollection.InsertOne(status);
-                couchbaseBucket.Insert(status.Id.ToString(), status);
+                couchbaseBucket.Insert(status.Id, status);
             }
         }
     }

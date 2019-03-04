@@ -95,7 +95,7 @@ namespace DBseeder.EntitySeeders
                     order.Cost = cost;
 
                     mongoCollection.InsertOne(order);
-                    couchbaseBucket.Insert(order.Id.ToString(), order);
+                    couchbaseBucket.Insert(order.Id, order);
                 }
             }
         }

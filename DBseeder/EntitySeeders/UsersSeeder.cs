@@ -112,7 +112,7 @@ namespace DBseeder.EntitySeeders
                 }
 
                 mongoCollection.InsertOne(user);
-                couchbaseBucket.Insert(user.Id.ToString(), user);
+                couchbaseBucket.Insert(user.Id, user);
             }
         }
     }

@@ -54,7 +54,7 @@ namespace DBseeder.EntitySeeders
                             };
 
                             mongoCollection.InsertOne(article);
-                            couchbaseBucket.Insert(article.Id.ToString(), article);
+                            couchbaseBucket.Insert(article.Id, article);
                         }
                     }
                     else

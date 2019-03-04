@@ -39,7 +39,7 @@ namespace DBseeder.EntitySeeders
                 };
 
                 mongoCollection.InsertOne(mainCategory);
-                couchbaseBucket.Insert(mainCategory.Id.ToString(), mainCategory);
+                couchbaseBucket.Insert(mainCategory.Id, mainCategory);
 
                 var secondaryCategoryPath = new List<string>(mainCategory.CategoryPath);
                 secondaryCategoryPath.Add(mainCategory.Name);
@@ -62,7 +62,7 @@ namespace DBseeder.EntitySeeders
                     }
 
                     mongoCollection.InsertOne(secondaryCategory);
-                    couchbaseBucket.Insert(secondaryCategory.Id.ToString(), secondaryCategory);
+                    couchbaseBucket.Insert(secondaryCategory.Id, secondaryCategory);
 
                     var tertiaryCategoryPath = new List<string>(secondaryCategory.CategoryPath);
                     tertiaryCategoryPath.Add(secondaryCategory.Name);
@@ -85,7 +85,7 @@ namespace DBseeder.EntitySeeders
                         }
 
                         mongoCollection.InsertOne(tertiaryCategory);
-                        couchbaseBucket.Insert(tertiaryCategory.Id.ToString(), tertiaryCategory);
+                        couchbaseBucket.Insert(tertiaryCategory.Id, tertiaryCategory);
                     }
                 }
             }

@@ -142,7 +142,7 @@ namespace DBseeder.EntitySeeders
                     }
 
                     mongoCollection.InsertOne(product);
-                    couchbaseBucket.Insert(product.Id.ToString(), product);
+                    couchbaseBucket.Insert(product.Id, product);
 
                 }
             }
@@ -151,7 +151,7 @@ namespace DBseeder.EntitySeeders
             var productsCouchbase = new List<Product>();
             foreach (var p in productsMongo)
             {
-                var productCouchbase = couchbaseBucket.Get<Product>(p.Id.ToString()).Value;
+                var productCouchbase = couchbaseBucket.Get<Product>(p.Id).Value;
                 productsCouchbase.Add(productCouchbase);
             }
             for (int i = 0; i < productsMongo.Count; i++)
@@ -171,7 +171,7 @@ namespace DBseeder.EntitySeeders
                 }
                 var filter = Builders<Product>.Filter.Eq(p => p.Id, productsMongo[i].Id);
                 mongoCollection.ReplaceOne(filter, productsMongo[i]);
-                couchbaseBucket.Replace(productsCouchbase[i].Id.ToString(), productsCouchbase[i]);
+                couchbaseBucket.Replace(productsCouchbase[i].Id, productsCouchbase[i]);
             }
         }
     }

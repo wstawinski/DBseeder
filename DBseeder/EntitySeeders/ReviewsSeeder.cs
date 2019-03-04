@@ -29,7 +29,7 @@ namespace DBseeder.EntitySeeders
             var couchbaseProducts = new List<Product>();
             foreach (var p in mongoProducts)
             {
-                var couchbaseProduct = couchbaseProductsBucket.Get<Product>(p.Id.ToString()).Value;
+                var couchbaseProduct = couchbaseProductsBucket.Get<Product>(p.Id).Value;
                 couchbaseProducts.Add(couchbaseProduct);
             }
 
@@ -71,7 +71,7 @@ namespace DBseeder.EntitySeeders
                     review.Text = text;
 
                     mongoCollection.InsertOne(review);
-                    couchbaseBucket.Insert(review.Id.ToString(), review);
+                    couchbaseBucket.Insert(review.Id, review);
                 }
 
                 if (reviewsCount != 0)
@@ -90,7 +90,7 @@ namespace DBseeder.EntitySeeders
 
                     var filter = Builders<Product>.Filter.Eq(p => p.Id, mongoProducts[i].Id);
                     mongoProductsCollection.ReplaceOne(filter, mongoProducts[i]);
-                    couchbaseProductsBucket.Replace(couchbaseProducts[i].Id.ToString(), couchbaseProducts[i]);
+                    couchbaseProductsBucket.Replace(couchbaseProducts[i].Id, couchbaseProducts[i]);
                 }
             }
         }
