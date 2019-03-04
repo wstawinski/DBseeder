@@ -98,6 +98,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ApiResponse.cs" />
+    <Compile Include="Models\ApiResponseArticle.cs" />
     <Compile Include="Entities\Category.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderStatus.cs" />
@@ -106,6 +108,7 @@
     <Compile Include="Entities\Review.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="EntitySeeders\CategoriesSeeder.cs" />
+    <Compile Include="EntitySeeders\NewsSeeder.cs" />
     <Compile Include="EntitySeeders\OrdersSeeder.cs" />
     <Compile Include="EntitySeeders\OrderStatusesSeeder.cs" />
     <Compile Include="EntitySeeders\PaymentMethodsSeeder.cs" />
