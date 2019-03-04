@@ -12,7 +12,7 @@ namespace DBseeder.EntitySeeders
     {
         private const string apiPath = "https://newsapi.org/v2/everything";
         private static readonly string[] sources = { "bbc-news", "daily-mail", "the-guardian-uk" };
-        private const string apiKey = "daf0b98b42d34e6698bc1008f04e4849";
+        private const string apiKey = "daf0b98b42d34e6604e4849";
 
 
         public static async Task Seed(IMongoDatabase mongoDatabase, Cluster couchbaseCluster)
