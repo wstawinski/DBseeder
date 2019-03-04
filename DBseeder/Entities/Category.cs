@@ -12,7 +12,7 @@ namespace DBseeder.Entities
 {
     class Category
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("name")]
         [JsonProperty("name")]
@@ -20,7 +20,7 @@ namespace DBseeder.Entities
 
         [BsonElement("parentCategoryId")]
         [JsonProperty("parentCategoryId")]
-        public Guid ParentCategoryId { get; set; }
+        public string ParentCategoryId { get; set; }
 
         [BsonElement("categoryPath")]
         [JsonProperty("categoryPath")]

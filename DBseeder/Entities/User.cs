@@ -12,7 +12,7 @@ namespace DBseeder.Entities
 {
     class User
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("firstName")]
         [JsonProperty("firstName")]
@@ -24,7 +24,7 @@ namespace DBseeder.Entities
 
         [BsonElement("birthDate")]
         [JsonProperty("birthDate")]
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; }
 
         [BsonElement("username")]
         [JsonProperty("username")]

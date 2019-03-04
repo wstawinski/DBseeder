@@ -51,10 +51,10 @@ namespace DBseeder.EntitySeeders
                 {
                     var order = new Order
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.NewGuid().ToString(),
                         UserId = mongoUsers[i].Id,
                         ProductsList = new List<OrderItem>(),
-                        DateOrdered = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc),
+                        DateOrdered = startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)).ToString(),
                         Status = mongoStatusses[random.Next(mongoStatusses.Count)],
                         StatusHistory = new List<OrderStatusHistoryUnit>(),
                         PaymentMethod = mongoPaymentMethods[random.Next(mongoPaymentMethods.Count)],
@@ -81,8 +81,8 @@ namespace DBseeder.EntitySeeders
                         var statusHistoryUnit = new OrderStatusHistoryUnit
                         {
                             Name = mongoStatusses[k].Name,
-                            DateStart = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc),
-                            DateEnd = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc)
+                            DateStart = startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)).ToString(),
+                            DateEnd = startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)).ToString()
                         };
                         order.StatusHistory.Add(statusHistoryUnit);
                     }

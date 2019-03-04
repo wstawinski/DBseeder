@@ -11,15 +11,15 @@ namespace DBseeder.Entities
 {
     class Review
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("productId")]
         [JsonProperty("productId")]
-        public Guid ProductId { get; set; }
+        public string ProductId { get; set; }
 
         [BsonElement("userId")]
         [JsonProperty("userId")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         [BsonElement("username")]
         [JsonProperty("username")]
@@ -35,7 +35,7 @@ namespace DBseeder.Entities
 
         [BsonElement("dateAdded")]
         [JsonProperty("dateAdded")]
-        public DateTime DateAdded { get; set; }
+        public string DateAdded { get; set; }
 
         [BsonElement("helpfulVotes")]
         [JsonProperty("helpfulVotes")]

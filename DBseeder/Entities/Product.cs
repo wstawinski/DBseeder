@@ -12,11 +12,11 @@ namespace DBseeder.Entities
 {
     class Product
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("categoryId")]
         [JsonProperty("categoryId")]
-        public Guid CategoryId { get; set; }
+        public string CategoryId { get; set; }
 
         [BsonElement("name")]
         [JsonProperty("name")]
@@ -40,7 +40,7 @@ namespace DBseeder.Entities
 
         [BsonElement("dateAdded")]
         [JsonProperty("dateAdded")]
-        public DateTime DateAdded { get; set; }
+        public string DateAdded { get; set; }
 
         [BsonElement("priceHistory")]
         [JsonProperty("priceHistory")]

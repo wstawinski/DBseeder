@@ -55,7 +55,7 @@ namespace DBseeder
                             break;
                         case 7: UsersSeeder.Seed(mongoDatabase, couchbaseCluster);
                             break;
-                        case 8: NewsSeeder.Seed(mongoDatabase, couchbaseCluster).Wait();
+                        case 8: ArticlesSeeder.Seed(mongoDatabase, couchbaseCluster).Wait();
                             break;
                         default:
                             break;

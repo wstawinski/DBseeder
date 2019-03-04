@@ -49,10 +49,10 @@ namespace DBseeder.EntitySeeders
                 {
                     var review = new Review
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.NewGuid().ToString(),
                         ProductId = mongoProducts[i].Id,
                         Rating = random.Next(11),
-                        DateAdded = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
+                        DateAdded = startDate.AddDays(random.Next(range)).ToString(),
                         HelpfulVotes = random.Next(51),
                         UnhelpfulVotes = random.Next(51)
                     };

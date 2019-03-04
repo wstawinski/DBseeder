@@ -20,7 +20,7 @@ namespace DBseeder.Models
 
         [BsonElement("flatNumber")]
         [JsonProperty("flatNumber")]
-        public int? FlatNumber { get; set; }
+        public int FlatNumber { get; set; }
 
         [BsonElement("postalCode")]
         [JsonProperty("postalCode")]

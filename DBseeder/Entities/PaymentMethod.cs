@@ -11,7 +11,7 @@ namespace DBseeder.Entities
 {
     class PaymentMethod
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("name")]
         [JsonProperty("name")]

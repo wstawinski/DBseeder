@@ -65,14 +65,14 @@ namespace DBseeder.EntitySeeders
             var endDate = new DateTime(2005, 1, 1);
             var range = (endDate - startDate).Days;
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 var user = new User
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     FirstName = firstNames[random.Next(firstNames.Length)],
                     LastName = lastNames[random.Next(lastNames.Length)],
-                    BirthDate = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
+                    BirthDate = startDate.AddDays(random.Next(range)).ToString(),
                     HashedPassword = new string(Enumerable.Repeat(specials, 10).Select(s => s[random.Next(s.Length)]).ToArray()),
                     PhoneNumber = new string(Enumerable.Repeat(digits, 9).Select(s => s[random.Next(s.Length)]).ToArray()),
                     Addresses = new List<Address>()
@@ -103,15 +103,10 @@ namespace DBseeder.EntitySeeders
                     {
                         Street = streets[random.Next(streets.Length)],
                         HouseNumber = random.Next(1, 101),
+                        FlatNumber = random.Next(0, 21),
                         PostalCode = random.Next(90, 100) + "-" + random.Next(1000).ToString("000"),
                         City = cities[random.Next(cities.Length)]
                     };
-
-                    var homeType = random.Next();
-                    if (homeType % 2 == 0)
-                        address.FlatNumber = null;
-                    else
-                        address.FlatNumber = random.Next(1, 21);
 
                     user.Addresses.Add(address);
                 }

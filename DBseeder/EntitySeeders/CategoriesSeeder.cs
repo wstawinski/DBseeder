@@ -32,9 +32,9 @@ namespace DBseeder.EntitySeeders
             {
                 var mainCategory = new Category
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = main[i],
-                    ParentCategoryId = Guid.Empty,
+                    ParentCategoryId = Guid.Empty.ToString(),
                     CategoryPath = new List<string>()
                 };
 
@@ -48,7 +48,7 @@ namespace DBseeder.EntitySeeders
                 {
                     var secondaryCategory = new Category
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.NewGuid().ToString(),
                         ParentCategoryId = mainCategory.Id,
                         CategoryPath = secondaryCategoryPath
                     };
@@ -71,7 +71,7 @@ namespace DBseeder.EntitySeeders
                     {
                         var tertiaryCategory = new Category
                         {
-                            Id = Guid.NewGuid(),
+                            Id = Guid.NewGuid().ToString(),
                             ParentCategoryId = secondaryCategory.Id,
                             CategoryPath = tertiaryCategoryPath
                         };

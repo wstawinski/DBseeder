@@ -11,7 +11,7 @@ namespace DBseeder.Entities
 {
     class OrderStatus
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("name")]
         [JsonProperty("name")]
@@ -21,8 +21,8 @@ namespace DBseeder.Entities
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [BsonElement("sequence")]
-        [JsonProperty("sequence")]
-        public int Sequence { get; set; }
+        [BsonElement("numberInSequence")]
+        [JsonProperty("numberInSequence")]
+        public int NumberInSequence { get; set; }
     }
 }

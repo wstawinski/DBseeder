@@ -51,12 +51,12 @@ namespace DBseeder.EntitySeeders
                 {
                     var product = new Product
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.NewGuid().ToString(),
                         CategoryId = leafCategoriesMongo[i].Id,
                         Details = new List<ProductDetail>(),
                         Quantity = random.Next(10, 201),
                         ActualPrice = random.Next(50, 2000) + 0.01 * random.Next(0, 100),
-                        DateAdded = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
+                        DateAdded = startDate.AddDays(random.Next(range)).ToString(),
                         PriceHistory = new List<ProductPrice>(),
                         Accessories = new List<ProductAccessory>(),
                         AverageRating = 0,
@@ -135,8 +135,8 @@ namespace DBseeder.EntitySeeders
                         var price = new ProductPrice
                         {
                             Price = random.Next(50, 2000) + 0.01 * random.Next(0, 100),
-                            DateStart = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
-                            DateEnd = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc)
+                            DateStart = startDate.AddDays(random.Next(range)).ToString(),
+                            DateEnd = startDate.AddDays(random.Next(range)).ToString()
                         };
                         product.PriceHistory.Add(price);
                     }

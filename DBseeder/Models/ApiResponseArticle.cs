@@ -8,6 +8,7 @@ namespace DBseeder.Models
 {
     class ApiResponseArticle
     {
+        public ApiResponseArticleSource Source { get; set; }
         public string Author { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

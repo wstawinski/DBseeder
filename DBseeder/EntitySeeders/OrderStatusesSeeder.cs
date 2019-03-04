@@ -36,10 +36,10 @@ namespace DBseeder.EntitySeeders
 
                 var status = new OrderStatus
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = names[i],
                     Description = description,
-                    Sequence = i
+                    NumberInSequence = i
                 };
 
                 mongoCollection.InsertOne(status);

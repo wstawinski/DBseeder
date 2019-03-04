@@ -12,11 +12,11 @@ namespace DBseeder.Entities
 {
     class Order
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("userId")]
         [JsonProperty("userId")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         [BsonElement("productsList")]
         [JsonProperty("productsList")]
@@ -24,7 +24,7 @@ namespace DBseeder.Entities
 
         [BsonElement("dateOrdered")]
         [JsonProperty("dateOrdered")]
-        public DateTime DateOrdered { get; set; }
+        public string DateOrdered { get; set; }
 
         [BsonElement("status")]
         [JsonProperty("status")]

@@ -39,7 +39,7 @@ namespace DBseeder.EntitySeeders
 
                 var method = new PaymentMethod
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = names[i],
                     Description = description
                 };
