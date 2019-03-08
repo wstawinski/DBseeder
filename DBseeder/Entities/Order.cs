@@ -4,19 +4,18 @@ using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBseeder.Entities
 {
     class Order
     {
-        public string Id { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid Id { get; set; }
 
         [BsonElement("userId")]
         [JsonProperty("userId")]
-        public string UserId { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid UserId { get; set; }
 
         [BsonElement("productsList")]
         [JsonProperty("productsList")]
@@ -24,7 +23,7 @@ namespace DBseeder.Entities
 
         [BsonElement("dateOrdered")]
         [JsonProperty("dateOrdered")]
-        public string DateOrdered { get; set; }
+        public DateTime DateOrdered { get; set; }
 
         [BsonElement("status")]
         [JsonProperty("status")]
@@ -36,7 +35,7 @@ namespace DBseeder.Entities
 
         [BsonElement("cost")]
         [JsonProperty("cost")]
-        public double Cost { get; set; }
+        public decimal Cost { get; set; }
 
         [BsonElement("paymentMethod")]
         [JsonProperty("paymentMethod")]

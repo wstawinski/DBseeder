@@ -4,15 +4,13 @@ using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBseeder.Entities
 {
     class User
     {
-        public string Id { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid Id { get; set; }
 
         [BsonElement("firstName")]
         [JsonProperty("firstName")]
@@ -24,7 +22,7 @@ namespace DBseeder.Entities
 
         [BsonElement("birthDate")]
         [JsonProperty("birthDate")]
-        public string BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
         [BsonElement("username")]
         [JsonProperty("username")]

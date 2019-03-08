@@ -1,18 +1,15 @@
-﻿using DBseeder.Models;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBseeder.Entities
 {
     class Category
     {
-        public string Id { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid Id { get; set; }
 
         [BsonElement("name")]
         [JsonProperty("name")]
@@ -20,7 +17,8 @@ namespace DBseeder.Entities
 
         [BsonElement("parentCategoryId")]
         [JsonProperty("parentCategoryId")]
-        public string ParentCategoryId { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid ParentCategoryId { get; set; }
 
         [BsonElement("categoryPath")]
         [JsonProperty("categoryPath")]

@@ -2,24 +2,23 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBseeder.Entities
 {
     class Review
     {
-        public string Id { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid Id { get; set; }
 
         [BsonElement("productId")]
         [JsonProperty("productId")]
-        public string ProductId { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid ProductId { get; set; }
 
         [BsonElement("userId")]
         [JsonProperty("userId")]
-        public string UserId { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid UserId { get; set; }
 
         [BsonElement("username")]
         [JsonProperty("username")]
@@ -35,7 +34,7 @@ namespace DBseeder.Entities
 
         [BsonElement("dateAdded")]
         [JsonProperty("dateAdded")]
-        public string DateAdded { get; set; }
+        public DateTime DateAdded { get; set; }
 
         [BsonElement("helpfulVotes")]
         [JsonProperty("helpfulVotes")]

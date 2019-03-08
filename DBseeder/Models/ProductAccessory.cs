@@ -13,7 +13,8 @@ namespace DBseeder.Models
     {
         [BsonElement("productId")]
         [JsonProperty("productId")]
-        public string ProductId { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid ProductId { get; set; }
 
         [BsonElement("name")]
         [JsonProperty("name")]
@@ -21,6 +22,6 @@ namespace DBseeder.Models
 
         [BsonElement("actualPrice")]
         [JsonProperty("actualPrice")]
-        public double ActualPrice { get; set; }
+        public decimal ActualPrice { get; set; }
     }
 }

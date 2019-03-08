@@ -16,10 +16,10 @@ namespace DBseeder.Models
 
         [BsonElement("dateStart")]
         [JsonProperty("dateStart")]
-        public string DateStart { get; set; }
+        public DateTime DateStart { get; set; }
 
         [BsonElement("dateEnd")]
         [JsonProperty("dateEnd")]
-        public string DateEnd { get; set; }
+        public DateTime DateEnd { get; set; }
     }
 }

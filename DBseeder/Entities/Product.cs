@@ -4,19 +4,18 @@ using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBseeder.Entities
 {
     class Product
     {
-        public string Id { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid Id { get; set; }
 
         [BsonElement("categoryId")]
         [JsonProperty("categoryId")]
-        public string CategoryId { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public Guid CategoryId { get; set; }
 
         [BsonElement("name")]
         [JsonProperty("name")]
@@ -36,11 +35,11 @@ namespace DBseeder.Entities
 
         [BsonElement("actualPrice")]
         [JsonProperty("actualPrice")]
-        public double ActualPrice { get; set; }
+        public decimal ActualPrice { get; set; }
 
         [BsonElement("dateAdded")]
         [JsonProperty("dateAdded")]
-        public string DateAdded { get; set; }
+        public DateTime DateAdded { get; set; }
 
         [BsonElement("priceHistory")]
         [JsonProperty("priceHistory")]
@@ -52,7 +51,7 @@ namespace DBseeder.Entities
 
         [BsonElement("averageRating")]
         [JsonProperty("averageRating")]
-        public double AverageRating { get; set; }
+        public int AverageRating { get; set; }
 
         [BsonElement("reviewsCount")]
         [JsonProperty("reviewsCount")]
