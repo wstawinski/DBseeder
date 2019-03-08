@@ -29,7 +29,7 @@ namespace DBseeder.EntitySeeders
             var couchbaseProducts = new List<Product>();
             foreach (var p in mongoProducts)
             {
-                var couchbaseProduct = couchbaseProductsBucket.Get<Product>(p.Id).Value;
+                var couchbaseProduct = couchbaseProductsBucket.Get<Product>(p.Id.ToString()).Value;
                 couchbaseProducts.Add(couchbaseProduct);
             }
 
@@ -49,10 +49,10 @@ namespace DBseeder.EntitySeeders
                 {
                     var review = new Review
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        Id = Guid.NewGuid(),
                         ProductId = mongoProducts[i].Id,
                         Rating = random.Next(11),
-                        DateAdded = startDate.AddDays(random.Next(range)).ToString(),
+                        DateAdded = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
                         HelpfulVotes = random.Next(51),
                         UnhelpfulVotes = random.Next(51)
                     };
@@ -71,7 +71,7 @@ namespace DBseeder.EntitySeeders
                     review.Text = text;
 
                     mongoCollection.InsertOne(review);
-                    couchbaseBucket.Insert(review.Id, review);
+                    couchbaseBucket.Insert(review.Id.ToString(), review);
                 }
 
                 if (reviewsCount != 0)
@@ -85,12 +85,12 @@ namespace DBseeder.EntitySeeders
                     {
                         productReviewsRatingSum += r.Rating;
                     }
-                    mongoProducts[i].AverageRating = (double) productReviewsRatingSum / reviewsCount;
-                    couchbaseProducts[i].AverageRating = (double) productReviewsRatingSum / reviewsCount;
+                    mongoProducts[i].AverageRating = (int)Math.Round((double)productReviewsRatingSum / reviewsCount);
+                    couchbaseProducts[i].AverageRating = (int)Math.Round((double)productReviewsRatingSum / reviewsCount);
 
                     var filter = Builders<Product>.Filter.Eq(p => p.Id, mongoProducts[i].Id);
                     mongoProductsCollection.ReplaceOne(filter, mongoProducts[i]);
-                    couchbaseProductsBucket.Replace(couchbaseProducts[i].Id, couchbaseProducts[i]);
+                    couchbaseProductsBucket.Replace(couchbaseProducts[i].Id.ToString(), couchbaseProducts[i]);
                 }
             }
         }

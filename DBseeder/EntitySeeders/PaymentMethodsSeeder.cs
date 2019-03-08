@@ -39,13 +39,13 @@ namespace DBseeder.EntitySeeders
 
                 var method = new PaymentMethod
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
                     Name = names[i],
                     Description = description
                 };
 
                 mongoCollection.InsertOne(method);
-                couchbaseBucket.Insert(method.Id, method);
+                couchbaseBucket.Insert(method.Id.ToString(), method);
             }
         }
     }

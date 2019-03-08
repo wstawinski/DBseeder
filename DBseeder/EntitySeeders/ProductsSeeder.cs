@@ -51,12 +51,12 @@ namespace DBseeder.EntitySeeders
                 {
                     var product = new Product
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        Id = Guid.NewGuid(),
                         CategoryId = leafCategoriesMongo[i].Id,
                         Details = new List<ProductDetail>(),
                         Quantity = random.Next(10, 201),
-                        ActualPrice = random.Next(50, 2000) + 0.01 * random.Next(0, 100),
-                        DateAdded = startDate.AddDays(random.Next(range)).ToString(),
+                        ActualPrice = (decimal)random.Next(1000, 1000000) / 100,
+                        DateAdded = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
                         PriceHistory = new List<ProductPrice>(),
                         Accessories = new List<ProductAccessory>(),
                         AverageRating = 0,
@@ -135,14 +135,14 @@ namespace DBseeder.EntitySeeders
                         var price = new ProductPrice
                         {
                             Price = random.Next(50, 2000) + 0.01 * random.Next(0, 100),
-                            DateStart = startDate.AddDays(random.Next(range)).ToString(),
-                            DateEnd = startDate.AddDays(random.Next(range)).ToString()
+                            DateStart = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
+                            DateEnd = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc)
                         };
                         product.PriceHistory.Add(price);
                     }
 
                     mongoCollection.InsertOne(product);
-                    couchbaseBucket.Insert(product.Id, product);
+                    couchbaseBucket.Insert(product.Id.ToString(), product);
 
                 }
             }
@@ -151,7 +151,7 @@ namespace DBseeder.EntitySeeders
             var productsCouchbase = new List<Product>();
             foreach (var p in productsMongo)
             {
-                var productCouchbase = couchbaseBucket.Get<Product>(p.Id).Value;
+                var productCouchbase = couchbaseBucket.Get<Product>(p.Id.ToString()).Value;
                 productsCouchbase.Add(productCouchbase);
             }
             for (int i = 0; i < productsMongo.Count; i++)
@@ -171,7 +171,7 @@ namespace DBseeder.EntitySeeders
                 }
                 var filter = Builders<Product>.Filter.Eq(p => p.Id, productsMongo[i].Id);
                 mongoCollection.ReplaceOne(filter, productsMongo[i]);
-                couchbaseBucket.Replace(productsCouchbase[i].Id, productsCouchbase[i]);
+                couchbaseBucket.Replace(productsCouchbase[i].Id.ToString(), productsCouchbase[i]);
             }
         }
     }

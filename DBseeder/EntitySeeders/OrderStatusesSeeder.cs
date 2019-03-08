@@ -36,14 +36,14 @@ namespace DBseeder.EntitySeeders
 
                 var status = new OrderStatus
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
                     Name = names[i],
                     Description = description,
                     NumberInSequence = i
                 };
 
                 mongoCollection.InsertOne(status);
-                couchbaseBucket.Insert(status.Id, status);
+                couchbaseBucket.Insert(status.Id.ToString(), status);
             }
         }
     }

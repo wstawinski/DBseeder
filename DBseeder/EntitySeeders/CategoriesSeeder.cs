@@ -32,14 +32,14 @@ namespace DBseeder.EntitySeeders
             {
                 var mainCategory = new Category
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
                     Name = main[i],
-                    ParentCategoryId = Guid.Empty.ToString(),
+                    ParentCategoryId = Guid.Empty,
                     CategoryPath = new List<string>()
                 };
 
                 mongoCollection.InsertOne(mainCategory);
-                couchbaseBucket.Insert(mainCategory.Id, mainCategory);
+                couchbaseBucket.Insert(mainCategory.Id.ToString(), mainCategory);
 
                 var secondaryCategoryPath = new List<string>(mainCategory.CategoryPath);
                 secondaryCategoryPath.Add(mainCategory.Name);
@@ -48,7 +48,7 @@ namespace DBseeder.EntitySeeders
                 {
                     var secondaryCategory = new Category
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        Id = Guid.NewGuid(),
                         ParentCategoryId = mainCategory.Id,
                         CategoryPath = secondaryCategoryPath
                     };
@@ -62,7 +62,7 @@ namespace DBseeder.EntitySeeders
                     }
 
                     mongoCollection.InsertOne(secondaryCategory);
-                    couchbaseBucket.Insert(secondaryCategory.Id, secondaryCategory);
+                    couchbaseBucket.Insert(secondaryCategory.Id.ToString(), secondaryCategory);
 
                     var tertiaryCategoryPath = new List<string>(secondaryCategory.CategoryPath);
                     tertiaryCategoryPath.Add(secondaryCategory.Name);
@@ -71,7 +71,7 @@ namespace DBseeder.EntitySeeders
                     {
                         var tertiaryCategory = new Category
                         {
-                            Id = Guid.NewGuid().ToString(),
+                            Id = Guid.NewGuid(),
                             ParentCategoryId = secondaryCategory.Id,
                             CategoryPath = tertiaryCategoryPath
                         };
@@ -85,7 +85,7 @@ namespace DBseeder.EntitySeeders
                         }
 
                         mongoCollection.InsertOne(tertiaryCategory);
-                        couchbaseBucket.Insert(tertiaryCategory.Id, tertiaryCategory);
+                        couchbaseBucket.Insert(tertiaryCategory.Id.ToString(), tertiaryCategory);
                     }
                 }
             }

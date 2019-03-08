@@ -69,10 +69,10 @@ namespace DBseeder.EntitySeeders
             {
                 var user = new User
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
                     FirstName = firstNames[random.Next(firstNames.Length)],
                     LastName = lastNames[random.Next(lastNames.Length)],
-                    BirthDate = startDate.AddDays(random.Next(range)).ToString(),
+                    BirthDate = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
                     HashedPassword = new string(Enumerable.Repeat(specials, 10).Select(s => s[random.Next(s.Length)]).ToArray()),
                     PhoneNumber = new string(Enumerable.Repeat(digits, 9).Select(s => s[random.Next(s.Length)]).ToArray()),
                     Addresses = new List<Address>()
@@ -112,7 +112,7 @@ namespace DBseeder.EntitySeeders
                 }
 
                 mongoCollection.InsertOne(user);
-                couchbaseBucket.Insert(user.Id, user);
+                couchbaseBucket.Insert(user.Id.ToString(), user);
             }
         }
     }

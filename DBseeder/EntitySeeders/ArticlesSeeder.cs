@@ -42,19 +42,19 @@ namespace DBseeder.EntitySeeders
                         {
                             var article = new Article
                             {
-                                Id = Guid.NewGuid().ToString(),
+                                Id = Guid.NewGuid(),
                                 SourceName = a.Source.Name,
                                 Author = a.Author,
                                 Title = a.Title,
                                 Description = a.Description,
                                 Url = a.Url,
                                 UrlToImage = a.UrlToImage,
-                                PublishedAt = a.PublishedAt,
+                                PublishedAt = DateTime.Parse(a.PublishedAt).ToUniversalTime(),
                                 Content = a.Content
                             };
 
                             mongoCollection.InsertOne(article);
-                            couchbaseBucket.Insert(article.Id, article);
+                            couchbaseBucket.Insert(article.Id.ToString(), article);
                         }
                     }
                     else

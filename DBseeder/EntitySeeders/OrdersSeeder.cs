@@ -51,10 +51,10 @@ namespace DBseeder.EntitySeeders
                 {
                     var order = new Order
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        Id = Guid.NewGuid(),
                         UserId = mongoUsers[i].Id,
                         ProductsList = new List<OrderItem>(),
-                        DateOrdered = startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)).ToString(),
+                        DateOrdered = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc),
                         Status = mongoStatusses[random.Next(mongoStatusses.Count)],
                         StatusHistory = new List<OrderStatusHistoryUnit>(),
                         PaymentMethod = mongoPaymentMethods[random.Next(mongoPaymentMethods.Count)],
@@ -70,7 +70,7 @@ namespace DBseeder.EntitySeeders
                             ProductId = product.Id,
                             Name = product.Name,
                             ActualPrice = product.ActualPrice,
-                            Quantity = random.Next(6)
+                            Quantity = random.Next(1, 6)
                         };
                         order.ProductsList.Add(orderItem);
                     }
@@ -81,13 +81,13 @@ namespace DBseeder.EntitySeeders
                         var statusHistoryUnit = new OrderStatusHistoryUnit
                         {
                             Name = mongoStatusses[k].Name,
-                            DateStart = startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)).ToString(),
-                            DateEnd = startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)).ToString()
+                            DateStart = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc),
+                            DateEnd = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc)
                         };
                         order.StatusHistory.Add(statusHistoryUnit);
                     }
 
-                    var cost = 0.0;
+                    var cost = 0m;
                     foreach (var orderItem in order.ProductsList)
                     {
                         cost += orderItem.ActualPrice * orderItem.Quantity;
@@ -95,7 +95,7 @@ namespace DBseeder.EntitySeeders
                     order.Cost = cost;
 
                     mongoCollection.InsertOne(order);
-                    couchbaseBucket.Insert(order.Id, order);
+                    couchbaseBucket.Insert(order.Id.ToString(), order);
                 }
             }
         }
