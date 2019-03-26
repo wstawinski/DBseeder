@@ -1,4 +1,5 @@
 ﻿using Couchbase;
+using Couchbase.Linq;
 using DBseeder.Entities;
 using DBseeder.Models;
 using MongoDB.Bson;
@@ -15,13 +16,14 @@ namespace DBseeder.EntitySeeders
         private static readonly Random random = new Random();
 
 
-        public static void Seed(IMongoDatabase mongoDatabase, Cluster couchbaseCluster)
+        public static void Seed(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
         {
             var mongoCollection = mongoDatabase.GetCollection<Order>("orders");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseBucket = couchbaseCluster.OpenBucket("orders");
-            couchbaseBucket.CreateManager().Flush();
+            var couchbaseOrders = couchbaseBucket.Query<Order>().ToList();
+            foreach (var o in couchbaseOrders)
+                couchbaseBucket.Remove(o);
 
             //Products
             var mongoProductsCollection = mongoDatabase.GetCollection<Product>("products");
@@ -52,6 +54,7 @@ namespace DBseeder.EntitySeeders
                     var order = new Order
                     {
                         Id = Guid.NewGuid(),
+                        Type = "Order",
                         UserId = mongoUsers[i].Id,
                         ProductsList = new List<OrderItem>(),
                         DateOrdered = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc),
@@ -95,7 +98,7 @@ namespace DBseeder.EntitySeeders
                     order.Cost = cost;
 
                     mongoCollection.InsertOne(order);
-                    couchbaseBucket.Insert(order.Id.ToString(), order);
+                    couchbaseBucket.Save(order);
                 }
             }
         }

@@ -1,10 +1,8 @@
-﻿using Couchbase;
+﻿using Couchbase.Linq;
 using DBseeder.Entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 using System;
-using System.IO;
 using System.Linq;
 
 namespace DBseeder.EntitySeeders
@@ -18,13 +16,14 @@ namespace DBseeder.EntitySeeders
         private static readonly Random random = new Random();
 
 
-        public static void Seed(IMongoDatabase mongoDatabase, Cluster couchbaseCluster)
+        public static void Seed(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
         {
             var mongoCollection = mongoDatabase.GetCollection<PaymentMethod>("paymentMethods");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseBucket = couchbaseCluster.OpenBucket("paymentMethods");
-            couchbaseBucket.CreateManager().Flush();
+            var couchbaseMethods = couchbaseBucket.Query<PaymentMethod>().ToList();
+            foreach (var m in couchbaseMethods)
+                couchbaseBucket.Remove(m);
 
             for (int i = 0; i < names.Length; i++)
             {
@@ -40,12 +39,13 @@ namespace DBseeder.EntitySeeders
                 var method = new PaymentMethod
                 {
                     Id = Guid.NewGuid(),
+                    Type = "PaymentMethod",
                     Name = names[i],
                     Description = description
                 };
 
                 mongoCollection.InsertOne(method);
-                couchbaseBucket.Insert(method.Id.ToString(), method);
+                couchbaseBucket.Save(method);
             }
         }
     }

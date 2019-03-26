@@ -1,15 +1,23 @@
-﻿using MongoDB.Bson;
+﻿using Couchbase.Linq.Filters;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DBseeder.Entities
 {
+    [DocumentTypeFilter("Category")]
     class Category
     {
-        [BsonRepresentation(BsonType.String)]
+        [BsonId]
+        [Key]
         public Guid Id { get; set; }
+
+        [BsonIgnore]
+        [JsonProperty("type")]
+        public string Type { get; set; }
 
         [BsonElement("name")]
         [JsonProperty("name")]
@@ -17,7 +25,6 @@ namespace DBseeder.Entities
 
         [BsonElement("parentCategoryId")]
         [JsonProperty("parentCategoryId")]
-        [BsonRepresentation(BsonType.String)]
         public Guid ParentCategoryId { get; set; }
 
         [BsonElement("categoryPath")]

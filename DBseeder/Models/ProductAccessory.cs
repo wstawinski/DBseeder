@@ -13,7 +13,6 @@ namespace DBseeder.Models
     {
         [BsonElement("productId")]
         [JsonProperty("productId")]
-        [BsonRepresentation(BsonType.String)]
         public Guid ProductId { get; set; }
 
         [BsonElement("name")]

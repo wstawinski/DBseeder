@@ -1,4 +1,5 @@
 ﻿using Couchbase;
+using Couchbase.Linq;
 using DBseeder.Entities;
 using DBseeder.Models;
 using MongoDB.Bson;
@@ -53,13 +54,14 @@ namespace DBseeder.EntitySeeders
         private static readonly JsonSerializer serializer = new JsonSerializer();
 
 
-        public static void Seed(IMongoDatabase mongoDatabase, Cluster couchbaseCluster)
+        public static void Seed(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
         {
             var mongoCollection = mongoDatabase.GetCollection<User>("users");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseBucket = couchbaseCluster.OpenBucket("users");
-            couchbaseBucket.CreateManager().Flush();
+            var couchbaseUsers = couchbaseBucket.Query<User>().ToList();
+            foreach (var u in couchbaseUsers)
+                couchbaseBucket.Remove(u);
 
             var startDate = new DateTime(1950, 1, 1);
             var endDate = new DateTime(2005, 1, 1);
@@ -70,6 +72,7 @@ namespace DBseeder.EntitySeeders
                 var user = new User
                 {
                     Id = Guid.NewGuid(),
+                    Type = "User",
                     FirstName = firstNames[random.Next(firstNames.Length)],
                     LastName = lastNames[random.Next(lastNames.Length)],
                     BirthDate = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
@@ -112,7 +115,7 @@ namespace DBseeder.EntitySeeders
                 }
 
                 mongoCollection.InsertOne(user);
-                couchbaseBucket.Insert(user.Id.ToString(), user);
+                couchbaseBucket.Save(user);
             }
         }
     }

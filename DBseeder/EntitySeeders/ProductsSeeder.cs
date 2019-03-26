@@ -1,4 +1,5 @@
 ﻿using Couchbase;
+using Couchbase.Linq;
 using DBseeder.Entities;
 using DBseeder.Models;
 using MongoDB.Bson;
@@ -27,23 +28,21 @@ namespace DBseeder.EntitySeeders
         private static readonly Random random = new Random();
 
 
-        public static void Seed(IMongoDatabase mongoDatabase, Cluster couchbaseCluster)
+        public static void Seed(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
         {
             var mongoCollection = mongoDatabase.GetCollection<Product>("products");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseBucket = couchbaseCluster.OpenBucket("products");
-            couchbaseBucket.CreateManager().Flush();
-
+            var couchbaseProducts = couchbaseBucket.Query<Product>().ToList();
+            foreach (var p in couchbaseProducts)
+                couchbaseBucket.Remove(p);
 
             var mongoCategoriesCollection = mongoDatabase.GetCollection<Category>("categories");
             var leafCategoriesMongo = mongoCategoriesCollection.AsQueryable().Where(c => c.CategoryPath.Count == 2).ToList();
 
-
             var startDate = new DateTime(2010, 1, 1);
             var endDate = new DateTime(2019, 1, 1);
             var range = (endDate - startDate).Days;
-
 
             for (int i = 0; i < leafCategoriesMongo.Count; i++)
             {
@@ -52,6 +51,7 @@ namespace DBseeder.EntitySeeders
                     var product = new Product
                     {
                         Id = Guid.NewGuid(),
+                        Type = "Product",
                         CategoryId = leafCategoriesMongo[i].Id,
                         Details = new List<ProductDetail>(),
                         Quantity = random.Next(10, 201),
@@ -142,20 +142,16 @@ namespace DBseeder.EntitySeeders
                     }
 
                     mongoCollection.InsertOne(product);
-                    couchbaseBucket.Insert(product.Id.ToString(), product);
-
+                    couchbaseBucket.Save(product);
                 }
             }
 
             var productsMongo = mongoCollection.AsQueryable().ToList();
-            var productsCouchbase = new List<Product>();
-            foreach (var p in productsMongo)
-            {
-                var productCouchbase = couchbaseBucket.Get<Product>(p.Id.ToString()).Value;
-                productsCouchbase.Add(productCouchbase);
-            }
+            var productsCouchbase = couchbaseBucket.Query<Product>().ToList();
+
             for (int i = 0; i < productsMongo.Count; i++)
             {
+                var productCouchbase = productsCouchbase.Where(p => p.Id == productsMongo[i].Id).First();
                 var accessoriesCount = random.Next(3, 6);
                 for (int j = 0; j < accessoriesCount; j++)
                 {
@@ -166,12 +162,13 @@ namespace DBseeder.EntitySeeders
                         Name = accessoryProduct.Name,
                         ActualPrice = accessoryProduct.ActualPrice
                     };
+                    
                     productsMongo[i].Accessories.Add(accessory);
-                    productsCouchbase[i].Accessories.Add(accessory);
+                    productCouchbase.Accessories.Add(accessory);
                 }
                 var filter = Builders<Product>.Filter.Eq(p => p.Id, productsMongo[i].Id);
                 mongoCollection.ReplaceOne(filter, productsMongo[i]);
-                couchbaseBucket.Replace(productsCouchbase[i].Id.ToString(), productsCouchbase[i]);
+                couchbaseBucket.Save(productCouchbase);
             }
         }
     }

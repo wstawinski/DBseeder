@@ -1,7 +1,7 @@
 ﻿using Couchbase;
 using Couchbase.Authentication;
 using Couchbase.Configuration.Client;
-using DBseeder.Entities;
+using Couchbase.Linq;
 using DBseeder.EntitySeeders;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -9,7 +9,6 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace DBseeder
 {
@@ -17,17 +16,27 @@ namespace DBseeder
     {
         static void Main(string[] args)
         {
-            var mongoClient = new MongoClient("mongodb://localhost:27017");
+            //MongoDB connection configuration
+            var mongoCredential = MongoCredential.CreateCredential("admin", "Administrator", "Password");
+            var mongoSettings = new MongoClientSettings
+            {
+                Credential = mongoCredential,
+                Server = new MongoServerAddress("localhost")
+            };
+            var mongoClient = new MongoClient(mongoSettings);
             var mongoDatabase = mongoClient.GetDatabase("database");
             BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Decimal128));
             BsonSerializer.RegisterSerializer(typeof(decimal?), new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
 
+            //Couchbase connection configuration
             var couchbaseCluster = new Cluster(new ClientConfiguration
             {
                 Servers = new List<Uri> { new Uri("http://localhost:8091")}
             });
             var authenticator = new PasswordAuthenticator("Administrator", "Password");
             couchbaseCluster.Authenticate(authenticator);
+            var couchbaseBucket = couchbaseCluster.OpenBucket("database");
+            var couchbaseBucketContext = new BucketContext(couchbaseBucket);
 
             int choice = 10;
             while (choice != 0)
@@ -48,24 +57,24 @@ namespace DBseeder
                 {
                     switch (choice)
                     {
-                        case 1: CategoriesSeeder.Seed(mongoDatabase, couchbaseCluster);
+                        case 1: CategoriesSeeder.Seed(mongoDatabase, couchbaseBucketContext);
                             break;
-                        case 2: OrdersSeeder.Seed(mongoDatabase, couchbaseCluster);
+                        case 2: OrdersSeeder.Seed(mongoDatabase, couchbaseBucketContext);
                             break;
-                        case 3: OrderStatusesSeeder.Seed(mongoDatabase, couchbaseCluster);
+                        case 3: OrderStatusesSeeder.Seed(mongoDatabase, couchbaseBucketContext);
                             break;
-                        case 4: PaymentMethodsSeeder.Seed(mongoDatabase, couchbaseCluster);
+                        case 4: PaymentMethodsSeeder.Seed(mongoDatabase, couchbaseBucketContext);
                             break;
-                        case 5: ProductsSeeder.Seed(mongoDatabase, couchbaseCluster);
+                        case 5: ProductsSeeder.Seed(mongoDatabase, couchbaseBucketContext);
                             break;
-                        case 6: ReviewsSeeder.Seed(mongoDatabase, couchbaseCluster);
+                        case 6: ReviewsSeeder.Seed(mongoDatabase, couchbaseBucketContext);
                             break;
-                        case 7: UsersSeeder.Seed(mongoDatabase, couchbaseCluster);
+                        case 7: UsersSeeder.Seed(mongoDatabase, couchbaseBucketContext);
                             break;
-                        case 8: ArticlesSeeder.Seed(mongoDatabase, couchbaseCluster).Wait();
+                        case 8: ArticlesSeeder.Seed(mongoDatabase, couchbaseBucketContext).Wait();
                             break;
                         case 9:
-                            Test(mongoDatabase, couchbaseCluster);
+                            Test(mongoDatabase, couchbaseBucketContext);
                             break;
                         default:
                             break;
@@ -77,7 +86,7 @@ namespace DBseeder
             Console.ReadKey();
         }
 
-        private static void Test(IMongoDatabase mongoDatabase, Cluster couchbaseCluster)
+        private static void Test(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
         {
 
         }

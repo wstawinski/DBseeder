@@ -1,14 +1,22 @@
-﻿using MongoDB.Bson;
+﻿using Couchbase.Linq.Filters;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DBseeder.Entities
 {
+    [DocumentTypeFilter("OrderStatus")]
     class OrderStatus
     {
-        [BsonRepresentation(BsonType.String)]
+        [BsonId]
+        [Key]
         public Guid Id { get; set; }
+
+        [BsonIgnore]
+        [JsonProperty("type")]
+        public string Type { get; set; }
 
         [BsonElement("name")]
         [JsonProperty("name")]

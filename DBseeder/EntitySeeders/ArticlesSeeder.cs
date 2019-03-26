@@ -1,10 +1,12 @@
 ﻿using Couchbase;
+using Couchbase.Linq;
 using DBseeder.Entities;
 using DBseeder.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -18,13 +20,14 @@ namespace DBseeder.EntitySeeders
         private const string apiKey = "&apiKey=daf0b98b42d34e6698bc1008f04e4849";
 
 
-        public static async Task Seed(IMongoDatabase mongoDatabase, Cluster couchbaseCluster)
+        public static async Task Seed(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
         {
             var mongoCollection = mongoDatabase.GetCollection<Article>("articles");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseBucket = couchbaseCluster.OpenBucket("articles");
-            couchbaseBucket.CreateManager().Flush();
+            var couchbaseArticles = couchbaseBucket.Query<Article>().ToList();
+            foreach (var a in couchbaseArticles)
+                couchbaseBucket.Remove(a);
 
 
             var httpClient = new HttpClient();
@@ -43,6 +46,7 @@ namespace DBseeder.EntitySeeders
                             var article = new Article
                             {
                                 Id = Guid.NewGuid(),
+                                Type = "Article",
                                 SourceName = a.Source.Name,
                                 Author = a.Author,
                                 Title = a.Title,
@@ -54,7 +58,7 @@ namespace DBseeder.EntitySeeders
                             };
 
                             mongoCollection.InsertOne(article);
-                            couchbaseBucket.Insert(article.Id.ToString(), article);
+                            couchbaseBucket.Save(article);
                         }
                     }
                     else

@@ -1,4 +1,5 @@
 ﻿using Couchbase;
+using Couchbase.Linq;
 using DBseeder.Entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -15,13 +16,14 @@ namespace DBseeder.EntitySeeders
         private static readonly Random random = new Random();
 
 
-        public static void Seed(IMongoDatabase mongoDatabase, Cluster couchbaseCluster)
+        public static void Seed(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
         {
             var mongoCollection = mongoDatabase.GetCollection<OrderStatus>("orderStatusses");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseBucket = couchbaseCluster.OpenBucket("orderStatusses");
-            couchbaseBucket.CreateManager().Flush();
+            var couchbaseStatusses = couchbaseBucket.Query<OrderStatus>().ToList();
+            foreach (var s in couchbaseStatusses)
+                couchbaseBucket.Remove(s);
 
             for (int i = 0; i < names.Length; i++)
             {
@@ -37,13 +39,14 @@ namespace DBseeder.EntitySeeders
                 var status = new OrderStatus
                 {
                     Id = Guid.NewGuid(),
+                    Type = "OrderStatus",
                     Name = names[i],
                     Description = description,
                     NumberInSequence = i
                 };
 
                 mongoCollection.InsertOne(status);
-                couchbaseBucket.Insert(status.Id.ToString(), status);
+                couchbaseBucket.Save(status);
             }
         }
     }

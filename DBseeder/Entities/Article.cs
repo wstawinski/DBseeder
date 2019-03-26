@@ -1,13 +1,22 @@
-﻿using MongoDB.Bson;
+﻿using Couchbase.Linq.Filters;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace DBseeder.Entities
 {
+    [DocumentTypeFilter("Article")]
     class Article
     {
-        [BsonRepresentation(BsonType.String)]
+        [BsonId]
+        [Key]
         public Guid Id { get; set; }
+
+        [BsonIgnore]
+        [JsonProperty("type")]
+        public string Type { get; set; }
 
         [BsonElement("sourceName")]
         [JsonProperty("sourceName")]
