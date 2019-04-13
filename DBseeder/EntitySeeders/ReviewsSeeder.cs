@@ -19,35 +19,27 @@ namespace DBseeder.EntitySeeders
             var mongoCollection = mongoDatabase.GetCollection<Review>("reviews");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseReviews = couchbaseBucket.Query<Review>().ToList();
-            foreach (var r in couchbaseReviews)
-                couchbaseBucket.Remove(r);
-
             //Products
             var mongoProductsCollection = mongoDatabase.GetCollection<Product>("products");
-            var mongoProducts = mongoProductsCollection.AsQueryable().ToList();
-
-            var couchbaseProducts = couchbaseBucket.Query<Product>().ToList();
+            var mongoProducts = mongoProductsCollection.AsQueryable().Select(p => p.Id).ToList();
 
             //Users
             var mongoUsersCollection = mongoDatabase.GetCollection<User>("users");
-            var mongoUsers = mongoUsersCollection.AsQueryable().ToList();
+            var mongoUsers = mongoUsersCollection.AsQueryable().Select(u => new { u.Id, u.Username }).ToList();
 
-            //Seeding
             var startDate = new DateTime(2010, 1, 1);
-            var endDate = new DateTime(2019, 1, 1);
+            var endDate = new DateTime(2020, 1, 1);
             var range = (endDate - startDate).Days;
 
             for (int i = 0; i < mongoProducts.Count; i++)
             {
-                var reviewsCount = random.Next(6);
-                for (int j = 0; j < reviewsCount; j++)
+                for (int j = 0; j < 10; j++)
                 {
                     var review = new Review
                     {
                         Id = Guid.NewGuid(),
                         Type = "Review",
-                        ProductId = mongoProducts[i].Id,
+                        ProductId = mongoProducts[i],
                         Rating = random.Next(11),
                         DateAdded = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
                         HelpfulVotes = random.Next(51),
@@ -60,7 +52,7 @@ namespace DBseeder.EntitySeeders
 
                     var textWordsCount = random.Next(10, 101);
                     var text = "";
-                    for (int k = 0; k < textWordsCount; k++)
+                    for (int l = 0; l < textWordsCount; l++)
                     {
                         var wordLength = random.Next(3, 11);
                         text += new string(Enumerable.Repeat(chars, wordLength).Select(s => s[random.Next(s.Length)]).ToArray()) + " ";
@@ -69,27 +61,6 @@ namespace DBseeder.EntitySeeders
 
                     mongoCollection.InsertOne(review);
                     couchbaseBucket.Save(review);
-                }
-
-                if (reviewsCount != 0)
-                {
-                    var couchbaseProduct = couchbaseProducts.Where(p => p.Id == mongoProducts[i].Id).First();
-
-                    mongoProducts[i].ReviewsCount = reviewsCount;
-                    couchbaseProduct.ReviewsCount = reviewsCount;
-
-                    var productReviews = mongoCollection.AsQueryable().Where(r => r.ProductId == mongoProducts[i].Id).ToList();
-                    var productReviewsRatingSum = 0;
-                    foreach (var r in productReviews)
-                    {
-                        productReviewsRatingSum += r.Rating;
-                    }
-                    mongoProducts[i].AverageRating = (int)Math.Round((double)productReviewsRatingSum / reviewsCount);
-                    couchbaseProduct.AverageRating = (int)Math.Round((double)productReviewsRatingSum / reviewsCount);
-
-                    var filter = Builders<Product>.Filter.Eq(p => p.Id, mongoProducts[i].Id);
-                    mongoProductsCollection.ReplaceOne(filter, mongoProducts[i]);
-                    couchbaseBucket.Save(couchbaseProduct);
                 }
             }
         }

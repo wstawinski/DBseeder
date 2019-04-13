@@ -119,10 +119,7 @@
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApiResponseArticleSource.cs" />
     <Compile Include="Models\OrderItem.cs" />
-    <Compile Include="Models\OrderStatusHistoryUnit.cs" />
-    <Compile Include="Models\ProductAccessory.cs" />
     <Compile Include="Models\ProductDetail.cs" />
-    <Compile Include="Models\ProductPrice.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

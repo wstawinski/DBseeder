@@ -36,10 +36,6 @@ namespace DBseeder.Entities
         [JsonProperty("status")]
         public OrderStatus Status { get; set; }
 
-        [BsonElement("statusHistory")]
-        [JsonProperty("statusHistory")]
-        public List<OrderStatusHistoryUnit> StatusHistory { get; set; }
-
         [BsonElement("cost")]
         [JsonProperty("cost")]
         public decimal Cost { get; set; }

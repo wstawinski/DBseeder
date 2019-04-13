@@ -21,28 +21,24 @@ namespace DBseeder.EntitySeeders
             var mongoCollection = mongoDatabase.GetCollection<PaymentMethod>("paymentMethods");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseMethods = couchbaseBucket.Query<PaymentMethod>().ToList();
-            foreach (var m in couchbaseMethods)
-                couchbaseBucket.Remove(m);
-
             for (int i = 0; i < names.Length; i++)
             {
+                var method = new PaymentMethod
+                {
+                    Id = Guid.NewGuid(),
+                    Type = "PaymentMethod",
+                    Name = names[i],
+                };
+
                 var descriptionWordsCount = random.Next(50, 101);
                 var description = "";
-
                 for (int j = 0; j < descriptionWordsCount; j++)
                 {
                     var wordLength = random.Next(3, 11);
                     description += new string(Enumerable.Repeat(chars, wordLength).Select(s => s[random.Next(s.Length)]).ToArray()) + " ";
                 }
 
-                var method = new PaymentMethod
-                {
-                    Id = Guid.NewGuid(),
-                    Type = "PaymentMethod",
-                    Name = names[i],
-                    Description = description
-                };
+                method.Description = description;
 
                 mongoCollection.InsertOne(method);
                 couchbaseBucket.Save(method);

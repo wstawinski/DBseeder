@@ -21,29 +21,25 @@ namespace DBseeder.EntitySeeders
             var mongoCollection = mongoDatabase.GetCollection<OrderStatus>("orderStatusses");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseStatusses = couchbaseBucket.Query<OrderStatus>().ToList();
-            foreach (var s in couchbaseStatusses)
-                couchbaseBucket.Remove(s);
-
             for (int i = 0; i < names.Length; i++)
             {
+                var status = new OrderStatus
+                {
+                    Id = Guid.NewGuid(),
+                    Type = "OrderStatus",
+                    Name = names[i],
+                    NumberInSequence = i
+                };
+
                 var descriptionWordsCount = random.Next(50, 101);
                 var description = "";
-
                 for (int j = 0; j < descriptionWordsCount; j++)
                 {
                     var wordLength = random.Next(3, 11);
                     description += new string(Enumerable.Repeat(chars, wordLength).Select(s => s[random.Next(s.Length)]).ToArray()) + " ";
                 }
 
-                var status = new OrderStatus
-                {
-                    Id = Guid.NewGuid(),
-                    Type = "OrderStatus",
-                    Name = names[i],
-                    Description = description,
-                    NumberInSequence = i
-                };
+                status.Description = description;
 
                 mongoCollection.InsertOne(status);
                 couchbaseBucket.Save(status);

@@ -48,14 +48,6 @@ namespace DBseeder.Entities
         [JsonProperty("dateAdded")]
         public DateTime DateAdded { get; set; }
 
-        [BsonElement("priceHistory")]
-        [JsonProperty("priceHistory")]
-        public List<ProductPrice> PriceHistory { get; set; }
-
-        [BsonElement("accessories")]
-        [JsonProperty("accessories")]
-        public List<ProductAccessory> Accessories { get; set; }
-
         [BsonElement("averageRating")]
         [JsonProperty("averageRating")]
         public int AverageRating { get; set; }

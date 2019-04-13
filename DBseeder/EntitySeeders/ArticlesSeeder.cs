@@ -1,5 +1,4 @@
-﻿using Couchbase;
-using Couchbase.Linq;
+﻿using Couchbase.Linq;
 using DBseeder.Entities;
 using DBseeder.Models;
 using MongoDB.Bson;
@@ -14,10 +13,10 @@ namespace DBseeder.EntitySeeders
 {
     class ArticlesSeeder
     {
-        private const string apiPath = "https://newsapi.org/v2/everything?pageSize=100";
-        private static readonly string[] sources = { "bbc-news", "business-insider-uk", "daily-mail",
-            "financial-times", "google-news-uk", "the-guardian-uk", "the-telegraph"};
-        private const string apiKey = "&apiKey=daf0b98b42d34e6698bc1008f04e4849";
+        private const string apiPath = "https://newsapi.org/v2/everything?";
+        private static readonly string[] sources = {  "bbc-news", "business-insider", "cnn", "daily-mail",
+            "financial-times", "fox-news", "google-news", "the-new-york-times", "the-telegraph"};
+        private const string apiKey = "abbbcedcdf8846e9914e2c7c5e75b2d7";
 
 
         public static async Task Seed(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
@@ -25,17 +24,15 @@ namespace DBseeder.EntitySeeders
             var mongoCollection = mongoDatabase.GetCollection<Article>("articles");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseArticles = couchbaseBucket.Query<Article>().ToList();
-            foreach (var a in couchbaseArticles)
-                couchbaseBucket.Remove(a);
-
-
+            var today = DateTime.Now.Date;
             var httpClient = new HttpClient();
             for (int i = 0; i < sources.Length; i++)
             {
-                for (int j = 1; j <= 10; j++)
+                for (int j = 0; j < 30; j++)
                 {
-                    var response = await httpClient.GetAsync(apiPath + "&sources=" + sources[i] + apiKey + "&page=" + j);
+                    var day = today.AddDays(-1 * j).ToString("yyyy-MM-dd");
+
+                    var response = await httpClient.GetAsync(apiPath + "sources=" + sources[i] + "&from=" + day + "&to=" + day + "&pageSize=100" + "&apiKey=" + apiKey);
                     if (response.IsSuccessStatusCode)
                     {
                         var apiResponseString = await response.Content.ReadAsStringAsync();

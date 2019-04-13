@@ -76,8 +76,6 @@ namespace DBseeder
                         case 9:
                             Test(mongoDatabase, couchbaseBucketContext);
                             break;
-                        default:
-                            break;
                     }
                 }
             }

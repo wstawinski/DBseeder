@@ -1,13 +1,10 @@
-﻿using Couchbase;
-using Couchbase.Linq;
+﻿using Couchbase.Linq;
 using DBseeder.Entities;
 using DBseeder.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace DBseeder.EntitySeeders
@@ -51,7 +48,6 @@ namespace DBseeder.EntitySeeders
         private const string chars = "abcdefghijklmnoprstuwxyz";
         private const string digits = "1234567890";
         private static readonly Random random = new Random();
-        private static readonly JsonSerializer serializer = new JsonSerializer();
 
 
         public static void Seed(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
@@ -59,45 +55,52 @@ namespace DBseeder.EntitySeeders
             var mongoCollection = mongoDatabase.GetCollection<User>("users");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseUsers = couchbaseBucket.Query<User>().ToList();
-            foreach (var u in couchbaseUsers)
-                couchbaseBucket.Remove(u);
-
             var startDate = new DateTime(1950, 1, 1);
-            var endDate = new DateTime(2005, 1, 1);
+            var endDate = new DateTime(2000, 1, 1);
             var range = (endDate - startDate).Days;
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100000; i++)
             {
                 var user = new User
                 {
                     Id = Guid.NewGuid(),
                     Type = "User",
-                    FirstName = firstNames[random.Next(firstNames.Length)],
-                    LastName = lastNames[random.Next(lastNames.Length)],
                     BirthDate = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
                     HashedPassword = new string(Enumerable.Repeat(specials, 10).Select(s => s[random.Next(s.Length)]).ToArray()),
                     PhoneNumber = new string(Enumerable.Repeat(digits, 9).Select(s => s[random.Next(s.Length)]).ToArray()),
                     Addresses = new List<Address>()
                 };
-                
-                var username = user.FirstName + "_" + user.LastName;
-                var exists = true;
-                var counter = 1;
-                while (exists)
-                {
-                    var userFromDb = mongoCollection.AsQueryable().Where(u => u.Username == username).SingleOrDefault();
-                    if (userFromDb != null)
-                    {
-                        username += counter;
-                        counter++;
-                    }
-                    else
-                        exists = false;
-                }
 
-                user.Username = username;
-                user.Email = username + "@mail.com";
+                if (i < 1000)
+                {
+                    user.FirstName = firstNames[random.Next(firstNames.Length)];
+                    user.LastName = lastNames[random.Next(lastNames.Length)];
+
+                    var username = user.FirstName + "_" + user.LastName;
+                    var exists = true;
+                    var counter = 1;
+                    while (exists)
+                    {
+                        var userFromDb = mongoCollection.AsQueryable().Where(u => u.Username == username).SingleOrDefault();
+                        if (userFromDb != null)
+                        {
+                            username += counter;
+                            counter++;
+                        }
+                        else
+                            exists = false;
+                    }
+
+                    user.Username = username;
+                    user.Email = username + "@mail.com";
+                }
+                else
+                {
+                    user.FirstName = new string(Enumerable.Repeat(chars, 5).Select(s => s[random.Next(s.Length)]).ToArray());
+                    user.LastName = new string(Enumerable.Repeat(chars, 10).Select(s => s[random.Next(s.Length)]).ToArray());
+                    user.Username = user.FirstName + "_" + user.LastName;
+                    user.Email = user.Username + "@mail.com";
+                }
 
                 var addressesCount = random.Next(1, 4);
                 for (int j = 0; j < addressesCount; j++)

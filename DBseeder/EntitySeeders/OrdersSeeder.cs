@@ -21,17 +21,13 @@ namespace DBseeder.EntitySeeders
             var mongoCollection = mongoDatabase.GetCollection<Order>("orders");
             mongoCollection.DeleteMany(new BsonDocument());
 
-            var couchbaseOrders = couchbaseBucket.Query<Order>().ToList();
-            foreach (var o in couchbaseOrders)
-                couchbaseBucket.Remove(o);
-
             //Products
             var mongoProductsCollection = mongoDatabase.GetCollection<Product>("products");
-            var mongoProducts = mongoProductsCollection.AsQueryable().ToList();
+            var mongoProducts = mongoProductsCollection.AsQueryable().Select(p => new { p.Id, p.Name, p.ActualPrice }).ToList();
 
             //Users
             var mongoUsersCollection = mongoDatabase.GetCollection<User>("users");
-            var mongoUsers = mongoUsersCollection.AsQueryable().ToList();
+            var mongoUsers = mongoUsersCollection.AsQueryable().Select(u => new { u.Id, u.Addresses }).ToList();
 
             //Statusses
             var mongoStatussesCollection = mongoDatabase.GetCollection<OrderStatus>("orderStatusses");
@@ -48,8 +44,7 @@ namespace DBseeder.EntitySeeders
 
             for (int i = 0; i < mongoUsers.Count; i++)
             {
-                var ordersCount = random.Next(11);
-                for (int j = 0; j < ordersCount; j++)
+                for (int j = 0; j < 10; j++)
                 {
                     var order = new Order
                     {
@@ -59,13 +54,12 @@ namespace DBseeder.EntitySeeders
                         ProductsList = new List<OrderItem>(),
                         DateOrdered = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc),
                         Status = mongoStatusses[random.Next(mongoStatusses.Count)],
-                        StatusHistory = new List<OrderStatusHistoryUnit>(),
                         PaymentMethod = mongoPaymentMethods[random.Next(mongoPaymentMethods.Count)],
-                        DeliveryAddress = mongoUsers[i].Addresses[random.Next(mongoUsers[i].Addresses.Count)]
+                        DeliveryAddress = mongoUsers[i].Addresses[random.Next(mongoUsers[i].Addresses.Count)],
+                        Cost = (decimal)random.Next(1000, 1000000) / 100
                     };
 
-                    var orderItemsCount = random.Next(1, 6);
-                    for (int k = 0; k < orderItemsCount; k++)
+                    for (int k = 0; k < 5; k++)
                     {
                         var product = mongoProducts[random.Next(mongoProducts.Count)];
                         var orderItem = new OrderItem
@@ -77,25 +71,6 @@ namespace DBseeder.EntitySeeders
                         };
                         order.ProductsList.Add(orderItem);
                     }
-
-                    var orderStatusHistoryUnits = random.Next(7);
-                    for (int k = 0; k < orderStatusHistoryUnits; k++)
-                    {
-                        var statusHistoryUnit = new OrderStatusHistoryUnit
-                        {
-                            Name = mongoStatusses[k].Name,
-                            DateStart = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc),
-                            DateEnd = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)).AddHours(random.Next(24)).AddMinutes(random.Next(60)), DateTimeKind.Utc)
-                        };
-                        order.StatusHistory.Add(statusHistoryUnit);
-                    }
-
-                    var cost = 0m;
-                    foreach (var orderItem in order.ProductsList)
-                    {
-                        cost += orderItem.ActualPrice * orderItem.Quantity;
-                    }
-                    order.Cost = cost;
 
                     mongoCollection.InsertOne(order);
                     couchbaseBucket.Save(order);

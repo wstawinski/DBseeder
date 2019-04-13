@@ -11,11 +11,11 @@ namespace DBseeder.EntitySeeders
 {
     static class CategoriesSeeder
     {
-        private static readonly string[] main = { "Notebooks", "Desktops", "RTV", "Household Goods", "Phones", "Cameras", "Gaming", "Office" };
+        private static readonly string[] main = { "Notebooks", "Desktops", "RTV", "Household Goods", "Phones", "Cameras", "Gaming", "Office", "Sports", "Films" };
         private static readonly string[] secondary = { "Accessories", "Components", "TVs", "Kitchenware",
-            "Smartphones", "Photographic equipment", "Video games", "Office devices" };
+            "Smartphones", "Photographic equipment", "Video games", "Office devices", "Football", "Fantasy" };
         private static readonly string[] tertiary = { "Bags", "Processors", "FullHD TVs", "Microwaves",
-            "Android", "Tripods", "PC games", "Faxes" };
+            "Android", "Tripods", "PC games", "Faxes", "Shorts", "Sci-Fi" };
 
         private const string chars = "abcdefghijklmnoprstuwxyz";
         private static readonly Random random = new Random();
@@ -25,10 +25,6 @@ namespace DBseeder.EntitySeeders
         {
             var mongoCollection = mongoDatabase.GetCollection<Category>("categories");
             mongoCollection.DeleteMany(new BsonDocument());
-
-            var couchbaseCategories = couchbaseBucket.Query<Category>().ToList();
-            foreach (var c in couchbaseCategories)
-                couchbaseBucket.Remove(c);
 
             for (int i = 0; i < main.Length; i++)
             {
