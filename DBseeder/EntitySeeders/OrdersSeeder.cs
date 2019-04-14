@@ -1,5 +1,4 @@
-﻿using Couchbase;
-using Couchbase.Linq;
+﻿using Couchbase.Linq;
 using DBseeder.Entities;
 using DBseeder.Models;
 using MongoDB.Bson;
@@ -39,12 +38,12 @@ namespace DBseeder.EntitySeeders
 
             //Seeding
             var startDate = new DateTime(2010, 1, 1);
-            var endDate = new DateTime(2019, 1, 1);
+            var endDate = new DateTime(2020, 1, 1);
             var range = (endDate - startDate).Days;
 
             for (int i = 0; i < mongoUsers.Count; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 1; j++)
                 {
                     var order = new Order
                     {

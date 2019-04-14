@@ -34,7 +34,7 @@ namespace DBseeder.EntitySeeders
 
             for (int i = 0; i < leafCategoriesMongo.Count; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 100; j++)
                 {
                     var product = new Product
                     {
@@ -46,7 +46,7 @@ namespace DBseeder.EntitySeeders
                         ActualPrice = (decimal)random.Next(1000, 1000000) / 100,
                         DateAdded = DateTime.SpecifyKind(startDate.AddDays(random.Next(range)), DateTimeKind.Utc),
                         AverageRating = random.Next(11),
-                        ReviewsCount = 10
+                        ReviewsCount = random.Next(101)
                     };
 
                     if (leafCategoriesMongo[i].Name == "Processors" && j < 10)

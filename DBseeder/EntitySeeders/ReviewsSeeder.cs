@@ -33,7 +33,7 @@ namespace DBseeder.EntitySeeders
 
             for (int i = 0; i < mongoProducts.Count; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 1; j++)
                 {
                     var review = new Review
                     {
