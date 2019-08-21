@@ -34,7 +34,7 @@ namespace DBseeder.EntitySeeders
 
             for (int i = 0; i < leafCategoriesMongo.Count; i++)
             {
-                for (int j = 0; j < 100; j++)
+                for (int j = 0; j < 1; j++)
                 {
                     var product = new Product
                     {

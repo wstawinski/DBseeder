@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace DBseeder.EntitySeeders
 {
-    static class ReviewsSeeder
+    class ReviewsSeeder
     {
         private const string chars = "abcdefghijklmnoprstuwxyz";
         private static readonly Random random = new Random();

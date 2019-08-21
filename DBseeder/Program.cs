@@ -2,25 +2,29 @@
 using Couchbase.Authentication;
 using Couchbase.Configuration.Client;
 using Couchbase.Linq;
+using DBseeder.Entities;
 using DBseeder.EntitySeeders;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DBseeder
 {
     class Program
     {
         static void Main(string[] args)
-        {
+        {   
+            /*
             //MongoDB connection configuration
-            var mongoCredential = MongoCredential.CreateCredential("admin", "Administrator", "Password");
+            //var mongoCredential = MongoCredential.CreateCredential("admin", "Administrator", "Password");
             var mongoSettings = new MongoClientSettings
             {
-                Credential = mongoCredential,
+                //Credential = mongoCredential,
                 Server = new MongoServerAddress("localhost")
             };
             var mongoClient = new MongoClient(mongoSettings);
@@ -37,6 +41,7 @@ namespace DBseeder
             couchbaseCluster.Authenticate(authenticator);
             var couchbaseBucket = couchbaseCluster.OpenBucket("database");
             var couchbaseBucketContext = new BucketContext(couchbaseBucket);
+            */
 
             int choice = 10;
             while (choice != 0)
@@ -57,6 +62,7 @@ namespace DBseeder
                 {
                     switch (choice)
                     {
+                        /*
                         case 1: CategoriesSeeder.Seed(mongoDatabase, couchbaseBucketContext);
                             break;
                         case 2: OrdersSeeder.Seed(mongoDatabase, couchbaseBucketContext);
@@ -73,8 +79,9 @@ namespace DBseeder
                             break;
                         case 8: ArticlesSeeder.Seed(mongoDatabase, couchbaseBucketContext).Wait();
                             break;
+                        */
                         case 9:
-                            Test(mongoDatabase, couchbaseBucketContext);
+                            Test();
                             break;
                     }
                 }
@@ -84,9 +91,36 @@ namespace DBseeder
             Console.ReadKey();
         }
 
-        private static void Test(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
+        static void Test()
         {
 
         }
+
+        static int CalculatePower(int number)
+        {
+            if (number == 0)
+                return 1;
+
+            var result = number * CalculatePower(number - 1);
+            return result;
+        }
+    }
+
+    class Test
+    {
+        public Test()
+        {
+
+        }
+
+        public void DoSth()
+        {
+            
+        }
+    }
+
+    struct Test1
+    {
+
     }
 }

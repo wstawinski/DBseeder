@@ -14,9 +14,9 @@ namespace DBseeder.EntitySeeders
     class ArticlesSeeder
     {
         private const string apiPath = "https://newsapi.org/v2/everything?";
-        private static readonly string[] sources = {  "bbc-news", "business-insider", "cnn", "daily-mail",
+        private static readonly string[] sources = {  "abc-news", "bbc-news", "business-insider", "cnn", "daily-mail",
             "financial-times", "fox-news", "google-news", "the-new-york-times", "the-telegraph"};
-        private const string apiKey = "abbbcedcdf8846e9914e2c7c5e75b2d7";
+        private const string apiKey = "f8dac3d617d345d7ab63fdd9a34ff5c9";
 
 
         public static async Task Seed(IMongoDatabase mongoDatabase, BucketContext couchbaseBucket)
@@ -28,7 +28,7 @@ namespace DBseeder.EntitySeeders
             var httpClient = new HttpClient();
             for (int i = 0; i < sources.Length; i++)
             {
-                for (int j = 0; j < 30; j++)
+                for (int j = 0; j < 1; j++)
                 {
                     var day = today.AddDays(-1 * j).ToString("yyyy-MM-dd");
 
@@ -42,7 +42,6 @@ namespace DBseeder.EntitySeeders
                         {
                             var article = new Article
                             {
-                                Id = Guid.NewGuid(),
                                 Type = "Article",
                                 SourceName = a.Source.Name,
                                 Author = a.Author,
@@ -54,8 +53,12 @@ namespace DBseeder.EntitySeeders
                                 Content = a.Content
                             };
 
-                            mongoCollection.InsertOne(article);
-                            couchbaseBucket.Save(article);
+                            for (int k = 0; k < 1; k++)
+                            {
+                                article.Id = Guid.NewGuid();
+                                mongoCollection.InsertOne(article);
+                                couchbaseBucket.Save(article);
+                            }
                         }
                     }
                     else

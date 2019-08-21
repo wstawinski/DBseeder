@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace DBseeder.EntitySeeders
 {
-    static class UsersSeeder
+    class UsersSeeder
     {
         private static readonly string[] firstNames =
         {
@@ -59,7 +59,7 @@ namespace DBseeder.EntitySeeders
             var endDate = new DateTime(2000, 1, 1);
             var range = (endDate - startDate).Days;
 
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 var user = new User
                 {
