@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace DBseeder.EntitySeeders
 {
-    class UsersSeeder
+     static class UsersSeeder
     {
         private static readonly string[] firstNames =
         {

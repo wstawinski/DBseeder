@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DBseeder.EntitySeeders
 {
-    class ArticlesSeeder
+    static class ArticlesSeeder
     {
         private const string apiPath = "https://newsapi.org/v2/everything?";
         private static readonly string[] sources = {  "abc-news", "bbc-news", "business-insider", "cnn", "daily-mail",
